@@ -18,6 +18,8 @@ public class Proposta {
 	private String endereco;
 	private Double salario;
 
+	public Proposta() {	}
+	
 	public Proposta(String documento, String email, String nome, String endereco,Double salario) {
 		this.documento = documento;
 		this.email = email;

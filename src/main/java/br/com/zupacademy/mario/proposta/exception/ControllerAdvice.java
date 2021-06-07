@@ -30,4 +30,16 @@ public class ControllerAdvice {
 
 		return ResponseEntity.badRequest().body(erroDeValidacao);
 	}
+	
+	@ExceptionHandler(ResponseStatusException.class)
+	public ResponseEntity<ErroPadrao> errodeStatus (ResponseStatusException expn, HttpServletRequest request) {
+		final Integer status = expn.getStatus().value();
+		final String erro = expn.getStatus().getReasonPhrase();
+		final String mensagem = expn.getReason();
+		final String caminho = request.getRequestURI();
+		var erroPadrao = new ErroPadrao(status, erro, mensagem, caminho);
+		
+		return ResponseEntity.status(status).body(erroPadrao);
+	}
+	
 }
