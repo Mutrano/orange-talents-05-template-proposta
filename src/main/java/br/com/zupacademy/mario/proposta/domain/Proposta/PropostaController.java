@@ -1,7 +1,5 @@
 package br.com.zupacademy.mario.proposta.domain.Proposta;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +25,6 @@ public class PropostaController {
 	@Autowired
 	private PropostaClient propostaClient;
 
-	@PersistenceContext
-	private EntityManager em;
 
 	@PostMapping
 	public ResponseEntity<Void> cadastraProposta(@RequestBody @Valid CadastraPropostaRequest request,
