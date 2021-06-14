@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
@@ -40,6 +41,16 @@ public class ControllerAdvice {
 		var erroPadrao = new ErroPadrao(status, erro, mensagem, caminho);
 		
 		return ResponseEntity.status(status).body(erroPadrao);
+	}
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<ErroPadrao> errodeTipo( MethodArgumentTypeMismatchException expn, HttpServletRequest request){
+		final Integer status = HttpStatus.BAD_REQUEST.value();
+		final String erro = "Erro de validação";
+		final String mensagem = "Tente novamente com outros valores";
+		final String caminho = request.getRequestURI();
+		var erroPadrao = new ErroPadrao(status, erro, mensagem, caminho);
+		return ResponseEntity.badRequest().body(erroPadrao);
+		
 	}
 	
 }

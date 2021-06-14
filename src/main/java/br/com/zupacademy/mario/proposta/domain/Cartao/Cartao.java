@@ -18,7 +18,7 @@ import br.com.zupacademy.mario.proposta.domain.Proposta.Proposta;
 
 @Entity
 public class Cartao {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -27,36 +27,36 @@ public class Cartao {
 
 	private String titular;
 
-	@OneToMany(mappedBy = "cartao",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
 	private List<Bloqueio> bloqueios = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "cartao",cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
 	private List<AvisoViagem> avisos = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "cartao",cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
 	private List<CarteiraDigital> carteiras = new ArrayList<>();
-	
-	@OneToMany(mappedBy = "cartao",cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
 	private List<Parcela> parcelas = new ArrayList();
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private Renegociacao renegociacao;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private Vencimento vencimento;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	private Proposta proposta;
-	
+
 	private Integer limite;
-	
+
 	private String uuid;
-	
+
 	@Deprecated
-	public Cartao() {}
-	
-	public Cartao(String uuid,LocalDateTime emitidoEm, String titular,
-			Proposta proposta, Integer limite) {
+	public Cartao() {
+	}
+
+	public Cartao(String uuid, LocalDateTime emitidoEm, String titular, Proposta proposta, Integer limite) {
 		this.emitidoEm = emitidoEm;
 		this.titular = titular;
 		this.proposta = proposta;
@@ -87,5 +87,9 @@ public class Cartao {
 	public void setVencimento(Vencimento vencimento) {
 		this.vencimento = vencimento;
 	}
-	
+
+	public String getUuid() {
+		return uuid;
+
+	}
 }

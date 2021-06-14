@@ -32,6 +32,7 @@ public class Proposta {
 
 	@OneToOne
 	private Cartao cartao;
+
 	
 	@Deprecated
 	public Proposta() {
@@ -68,5 +69,25 @@ public class Proposta {
 
 	public void setCartao(Cartao cartao) {
 		this.cartao = cartao;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public Double getSalario() {
+		return salario;
+	}
+
+	public EstadoProposta getEstadoProposta() {
+		return estadoProposta;
+	}
+
+	public Cartao getCartao() {
+		return cartao;
 	}
 }

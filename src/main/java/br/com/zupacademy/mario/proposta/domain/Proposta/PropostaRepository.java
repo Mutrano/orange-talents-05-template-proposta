@@ -2,12 +2,11 @@ package br.com.zupacademy.mario.proposta.domain.Proposta;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import br.com.zupacademy.mario.proposta.domain.Cartao.Cartao;
 
 @Repository
 public interface PropostaRepository extends JpaRepository<Proposta, Long>{
@@ -18,6 +17,10 @@ public interface PropostaRepository extends JpaRepository<Proposta, Long>{
 	@Transactional
 	Proposta save(Proposta proposta);
 	
-	@Transactional
+	@Transactional(readOnly=true)
 	List<Proposta> findByCartaoEquals(String valorDoWhere);
+	
+	@Transactional(readOnly=true)
+	Optional<Proposta> findByUuid(UUID uuid);
+
 }
