@@ -18,9 +18,6 @@ public interface PropostaRepository extends JpaRepository<Proposta, Long>{
 	Proposta save(Proposta proposta);
 	
 	@Transactional(readOnly=true)
-	List<Proposta> findByCartaoEquals(String valorDoWhere);
-	
-	@Transactional(readOnly=true)
 	Optional<Proposta> findByUuid(UUID uuid);
 
 }

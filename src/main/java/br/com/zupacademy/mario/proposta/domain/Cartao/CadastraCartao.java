@@ -12,38 +12,32 @@ import br.com.zupacademy.mario.proposta.domain.Proposta.InformacaoProposta;
 import br.com.zupacademy.mario.proposta.domain.Proposta.Proposta;
 import br.com.zupacademy.mario.proposta.domain.Proposta.PropostaRepository;
 import feign.FeignException;
-import feign.FeignException.FeignClientException;
-import feign.FeignException.FeignServerException;
 
 @Component
 public class CadastraCartao {
-	
-	private PropostaRepository propostaRepository;
-	private CartaoRepository cartaoRepository;
 	private CartaoClient cartaoClient;
+	private EntityManager em;
 	
 
-	public CadastraCartao(PropostaRepository propostaRepository, CartaoRepository cartaoRepository,
+	public CadastraCartao(EntityManager em,
 			CartaoClient cartaoClient) {
-		this.propostaRepository = propostaRepository;
-		this.cartaoRepository = cartaoRepository;
 		this.cartaoClient = cartaoClient;
+		this.em=em;
 	}
 	
 	@Transactional
 	@Scheduled(fixedDelay = 5000)
 	public void atrelaCartao() {
-
+		var query = em.createQuery("SELECT p FROM Proposta p where p.cartao=null AND p.estadoProposta LIKE 'ELEGIVEL'");
 		
-		var propostas = propostaRepository.findByCartaoEquals(null);
-		
+		var propostas = (List<Proposta>) query.getResultList();
 		propostas.forEach(proposta -> {
 			try {
 
 				var cartaoResponse = cartaoClient.cadastraCartao(InformacaoProposta.deProposta(proposta));
 				var cartao = cartaoResponse.toModel(proposta);
 				proposta.setCartao(cartao);
-				cartaoRepository.save(cartao);
+				em.persist(cartao);
 				
 			}
 			catch(FeignException expn) {
