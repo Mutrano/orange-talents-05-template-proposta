@@ -11,6 +11,6 @@ public interface PropostaClient {
 	
 	
 	@RequestMapping(method= RequestMethod.POST,value = "/api/solicitacao")
-	ResultadoAnalise solicitaAnalise(@RequestBody SolicitacaoAnalise solicitacao);
+	ResultadoAnalise solicitaAnalise(@RequestBody InformacaoProposta solicitacao);
 	
 }

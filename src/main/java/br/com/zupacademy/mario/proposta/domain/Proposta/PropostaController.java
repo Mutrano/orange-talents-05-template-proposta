@@ -37,7 +37,7 @@ public class PropostaController {
 		}
 
 		var propostaSalva = repository.save(request.toModel());
-		var solicitacaoAnalise = new SolicitacaoAnalise(propostaSalva.getDocumento(), propostaSalva.getNome(),
+		var solicitacaoAnalise = new InformacaoProposta(propostaSalva.getDocumento(), propostaSalva.getNome(),
 				propostaSalva.getId().toString());
 		try {
 			var resultadoAnalise = propostaClient.solicitaAnalise(solicitacaoAnalise);
@@ -53,7 +53,10 @@ public class PropostaController {
 		}
 
 		var uri = uricomponentsBuilder.path("/Propostas/{id}").buildAndExpand(propostaSalva.getId()).toUri();
+
 		return ResponseEntity.created(uri).build();
 	}
+	
+	
 
 }
