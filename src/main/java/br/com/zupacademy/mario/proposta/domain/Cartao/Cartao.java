@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,25 +28,28 @@ public class Cartao {
 
 	private String titular;
 
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<Bloqueio> bloqueios = new ArrayList<>();
 
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<AvisoViagem> avisos = new ArrayList<>();
 
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private List<CarteiraDigital> carteiras = new ArrayList<>();
 
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL)
-	private List<Parcela> parcelas = new ArrayList();
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<Parcela> parcelas = new ArrayList<>();
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<Biometria> biometrias = new ArrayList<>();
+	
+	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Renegociacao renegociacao;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Vencimento vencimento;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private Proposta proposta;
 
 	private Integer limite;
@@ -86,6 +90,10 @@ public class Cartao {
 
 	public void setVencimento(Vencimento vencimento) {
 		this.vencimento = vencimento;
+	}
+	
+	public void addBiometria(Biometria biometria) {
+		biometrias.add(biometria);
 	}
 
 	public String getUuid() {
