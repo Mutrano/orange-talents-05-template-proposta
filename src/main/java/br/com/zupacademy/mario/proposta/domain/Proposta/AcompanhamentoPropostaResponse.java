@@ -41,7 +41,6 @@ public class AcompanhamentoPropostaResponse {
 		var endereco= proposta.getEndereco();
 		var salario = proposta.getSalario();
 		var estadoProposta = proposta.getEstadoProposta();
-		//var idCartao = proposta.getCartao().getUuid();
 		var idCartao = proposta.temCartao()? proposta.getCartao().getUuid() : null;
 		
 		return new AcompanhamentoPropostaResponse(id, documento, email, nome, endereco, salario, estadoProposta, idCartao);
