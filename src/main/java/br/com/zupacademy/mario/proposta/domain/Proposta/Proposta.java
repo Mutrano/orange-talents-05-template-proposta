@@ -47,6 +47,9 @@ public class Proposta {
 		this.estadoProposta = EstadoProposta.NAO_ELEGIVEL;
 	}
 
+	public boolean temCartao() {
+		return cartao!=null;
+	}
 	public Long getId() {
 		return id;
 	}
