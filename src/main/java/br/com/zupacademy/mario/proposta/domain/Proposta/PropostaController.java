@@ -56,7 +56,7 @@ public class PropostaController {
 					"Tivemos um problema processando sua proposta");
 		}
 
-		var uri = uricomponentsBuilder.path("/Propostas/{id}").buildAndExpand(propostaSalva.getId()).toUri();
+		var uri = uricomponentsBuilder.path("/Propostas/{uuid}").buildAndExpand(propostaSalva.getUuid()).toUri();
 
 		return ResponseEntity.created(uri).build();
 	}

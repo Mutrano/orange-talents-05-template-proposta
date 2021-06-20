@@ -18,21 +18,25 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.zupacademy.mario.proposta.domain.shared.ExecutaTransacao;
+import feign.FeignException;
 
 @RestController
 public class CadastraBloqueioController {
 	
 	private EntityManager em;
 	private ExecutaTransacao executaTransacao;
+	private CartaoClient cartaoClient;
 
-	public CadastraBloqueioController(EntityManager em, ExecutaTransacao executaTransacao) {
+	public CadastraBloqueioController(EntityManager em, ExecutaTransacao executaTransacao,CartaoClient cartaoClient) {
 		this.em = em;
 		this.executaTransacao = executaTransacao;
+		this.cartaoClient=cartaoClient;
 	}
 
 
 	@PostMapping("/Cartoes/{uuid}/Bloqueios")
 	public ResponseEntity<Void> cadastraBloqueio(@PathVariable String uuid, HttpServletRequest request){
+		
 		var ipDaRequest = request.getRemoteAddr();
 		var userAgentDaRequest = request.getHeader("User-Agent");
 		
@@ -47,9 +51,7 @@ public class CadastraBloqueioController {
 		}
 		
 		//checar se o cartao ja esta bloqueado, caso esteja retornar 422
-		query = em.createQuery("SELECT c,b FROM Bloqueio b "
-				+ "RIGHT JOIN b.cartao c "
-				+ "WHERE c.uuid=:pUuid AND b.ativo=true")
+		query = em.createQuery("SELECT b from Bloqueio b WHERE b.cartao.uuid=:pUuid AND b.ativo=true")
 				.setParameter("pUuid", uuid);
 		
 		if (!query.getResultList().isEmpty()) {
@@ -58,8 +60,17 @@ public class CadastraBloqueioController {
 
 		var cartaoEncontrado = result.get(0);
 		var bloqueio = new Bloqueio(UUID.randomUUID(),Instant.now(), "Proposta", true, cartaoEncontrado, ipDaRequest, userAgentDaRequest);
-		
-		executaTransacao.salvaEComita(bloqueio);
+		try {
+			var resultadoBloqueio = cartaoClient.notificaBloqueio(uuid, new SolicitacaoBloqueio("Proposta"));
+			if(resultadoBloqueio.ehBloqueado()) {
+				cartaoEncontrado.setEstadoCartao(EstadoCartao.BLOQUEADO);
+				executaTransacao.salvaEComita(bloqueio);
+			}
+			
+		}
+		catch(FeignException expn) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "não conseguimos processar seu bloqueio");
+		}
 
 		return ResponseEntity.ok().build();
 	}

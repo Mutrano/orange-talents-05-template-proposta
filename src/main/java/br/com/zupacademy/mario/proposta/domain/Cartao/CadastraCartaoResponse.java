@@ -52,7 +52,7 @@ public class CadastraCartaoResponse {
 	}
 
 	public Cartao toModel(Proposta proposta) { 
-		var cartao = new Cartao(id,emitidoEm, titular, proposta, limite);
+		var cartao = new Cartao(id,emitidoEm, titular,EstadoCartao.ATIVO, proposta, limite);
 		cartao.setBloqueios(bloqueios.stream()
 				.map(dto -> dto.toModel(cartao)).collect(Collectors.toList()));
 		
@@ -64,13 +64,10 @@ public class CadastraCartaoResponse {
 		
 		cartao.setCarteiras(carteiras.stream()
 				.map(dto -> dto.toModel(cartao)).collect(Collectors.toList()));
-		
 		if(renegociacao!=null) {
 			cartao.setRenegociacao(renegociacao.toModel(cartao));
 		}
-		
 		cartao.setVencimento(vencimento.toModel(cartao));
-		
 		return cartao;
 
 	}

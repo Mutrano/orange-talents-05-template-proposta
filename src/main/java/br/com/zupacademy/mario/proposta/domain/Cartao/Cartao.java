@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.zupacademy.mario.proposta.domain.Proposta.Proposta;
 
@@ -23,33 +27,37 @@ public class Cartao {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
 	private LocalDateTime emitidoEm;
-
+	
 	private String titular;
-
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	
+	@Enumerated(EnumType.STRING)
+	private EstadoCartao estadoCartao;
+	
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Bloqueio> bloqueios = new ArrayList<>();
-
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<AvisoViagem> avisos = new ArrayList<>();
-
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<CarteiraDigital> carteiras = new ArrayList<>();
-
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Parcela> parcelas = new ArrayList<>();
-
-	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	
+	
+	@OneToMany(mappedBy = "cartao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Biometria> biometrias = new ArrayList<>();
 	
-	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Renegociacao renegociacao;
-
-	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Vencimento vencimento;
 
-	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Proposta proposta;
 
 	private Integer limite;
@@ -59,10 +67,12 @@ public class Cartao {
 	@Deprecated
 	public Cartao() {
 	}
-
-	public Cartao(String uuid, LocalDateTime emitidoEm, String titular, Proposta proposta, Integer limite) {
+	
+	public Cartao(String uuid, LocalDateTime emitidoEm, String titular, EstadoCartao estadoCartao, Proposta proposta,
+			Integer limite) {
 		this.emitidoEm = emitidoEm;
 		this.titular = titular;
+		this.estadoCartao = estadoCartao;
 		this.proposta = proposta;
 		this.limite = limite;
 		this.uuid = uuid;
@@ -91,9 +101,17 @@ public class Cartao {
 	public void setVencimento(Vencimento vencimento) {
 		this.vencimento = vencimento;
 	}
-	
+
 	public void addBiometria(Biometria biometria) {
 		biometrias.add(biometria);
+	}
+
+	public EstadoCartao getEstadoCartao() {
+		return estadoCartao;
+	}
+
+	public void setEstadoCartao(EstadoCartao estadoCartao) {
+		this.estadoCartao = estadoCartao;
 	}
 
 	public String getUuid() {

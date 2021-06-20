@@ -10,17 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.zupacademy.mario.proposta.domain.Proposta.InformacaoProposta;
 import br.com.zupacademy.mario.proposta.domain.Proposta.Proposta;
-import br.com.zupacademy.mario.proposta.domain.Proposta.PropostaRepository;
+import br.com.zupacademy.mario.proposta.domain.shared.ExecutaTransacao;
 import feign.FeignException;
 
 @Component
 public class CadastraCartao {
 	private CartaoClient cartaoClient;
 	private EntityManager em;
-	
-
-	public CadastraCartao(EntityManager em,
-			CartaoClient cartaoClient) {
+    
+	public CadastraCartao(EntityManager em,CartaoClient cartaoClient){
 		this.cartaoClient = cartaoClient;
 		this.em=em;
 	}
@@ -33,12 +31,10 @@ public class CadastraCartao {
 		var propostas = (List<Proposta>) query.getResultList();
 		propostas.forEach(proposta -> {
 			try {
-
 				var cartaoResponse = cartaoClient.cadastraCartao(InformacaoProposta.deProposta(proposta));
 				var cartao = cartaoResponse.toModel(proposta);
 				proposta.setCartao(cartao);
 				em.persist(cartao);
-				
 			}
 			catch(FeignException expn) {
 				expn.printStackTrace();
