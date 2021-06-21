@@ -14,7 +14,7 @@ import br.com.zupacademy.mario.proposta.domain.Cartao.Cartao;
 public class AvisoViagemInfo {
 	@FutureOrPresent
 	@NotNull
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private LocalDate validoAte;
 	
 	@NotBlank
