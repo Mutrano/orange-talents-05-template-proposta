@@ -1,7 +1,10 @@
-package br.com.zupacademy.mario.proposta.domain.Cartao;
+package br.com.zupacademy.mario.proposta.domain.Cartao.dto;
 
 import java.time.Instant;
 import java.util.UUID;
+
+import br.com.zupacademy.mario.proposta.domain.Cartao.Bloqueio;
+import br.com.zupacademy.mario.proposta.domain.Cartao.Cartao;
 
 public class BloqueioResponse {
 

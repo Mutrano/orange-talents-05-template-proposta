@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.zupacademy.mario.proposta.domain.Cartao.dto.CadastraBiometriaRequest;
+
 @RestController
 public class BiometriaController {
 

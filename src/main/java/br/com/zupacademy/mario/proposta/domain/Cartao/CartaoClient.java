@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import br.com.zupacademy.mario.proposta.domain.Cartao.dto.CadastraCartaoResponse;
+import br.com.zupacademy.mario.proposta.domain.Cartao.dto.ResultadoBloqueio;
+import br.com.zupacademy.mario.proposta.domain.Cartao.dto.SolicitacaoBloqueio;
 import br.com.zupacademy.mario.proposta.domain.Proposta.InformacaoProposta;
 
 @FeignClient(name = "cartoes" ,url = "${url_cartoes}")

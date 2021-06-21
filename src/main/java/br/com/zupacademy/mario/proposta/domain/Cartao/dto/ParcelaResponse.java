@@ -1,7 +1,10 @@
-package br.com.zupacademy.mario.proposta.domain.Cartao;
+package br.com.zupacademy.mario.proposta.domain.Cartao.dto;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import br.com.zupacademy.mario.proposta.domain.Cartao.Cartao;
+import br.com.zupacademy.mario.proposta.domain.Cartao.Parcela;
 
 public class ParcelaResponse {
 

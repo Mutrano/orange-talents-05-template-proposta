@@ -1,8 +1,11 @@
-package br.com.zupacademy.mario.proposta.domain.Cartao;
+package br.com.zupacademy.mario.proposta.domain.Cartao.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import br.com.zupacademy.mario.proposta.domain.Cartao.Cartao;
+import br.com.zupacademy.mario.proposta.domain.Cartao.Renegociacao;
 
 public class RenegociacaoResponse {
 	private String id;

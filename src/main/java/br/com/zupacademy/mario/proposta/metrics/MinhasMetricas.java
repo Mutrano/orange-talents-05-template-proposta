@@ -33,4 +33,10 @@ public class MinhasMetricas {
 	public void contaAcompanhamentoProposta() {
 		contadorDaMetrica("proposta_acompanhamento");
 	}
+	
+	public void contaAviso() {
+		contadorDaMetrica("aviso");
+	}
+	
+	
 }

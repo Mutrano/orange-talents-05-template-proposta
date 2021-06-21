@@ -1,4 +1,6 @@
-package br.com.zupacademy.mario.proposta.domain.Cartao;
+package br.com.zupacademy.mario.proposta.domain.Cartao.dto;
+
+import br.com.zupacademy.mario.proposta.domain.Cartao.EstadoBloqueio;
 
 public class ResultadoBloqueio{
 	private EstadoBloqueio resultado;

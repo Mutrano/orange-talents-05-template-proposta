@@ -1,4 +1,4 @@
-package br.com.zupacademy.mario.proposta.domain.Cartao;
+package br.com.zupacademy.mario.proposta.domain.Cartao.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import br.com.zupacademy.mario.proposta.domain.Cartao.Cartao;
+import br.com.zupacademy.mario.proposta.domain.Cartao.EstadoCartao;
 import br.com.zupacademy.mario.proposta.domain.Proposta.Proposta;
 
 public class CadastraCartaoResponse {
@@ -17,7 +19,7 @@ public class CadastraCartaoResponse {
 
 	private List<BloqueioResponse> bloqueios = new ArrayList<>();
 
-	private List<AvisoViagemResponse> avisos = new ArrayList<>();
+	private List<AvisoViagemInfo> avisos = new ArrayList<>();
 
 	private List<CarteiraDigitalResponse> carteiras = new ArrayList<>();
 
@@ -36,7 +38,7 @@ public class CadastraCartaoResponse {
 	}
 
 	public CadastraCartaoResponse(String id, LocalDateTime emitidoEm, String titular, List<BloqueioResponse> bloqueios,
-			List<AvisoViagemResponse> avisos, List<CarteiraDigitalResponse> carteiras, List<ParcelaResponse> parcelas,
+			List<AvisoViagemInfo> avisos, List<CarteiraDigitalResponse> carteiras, List<ParcelaResponse> parcelas,
 			Integer limite, RenegociacaoResponse renegociacao, VencimentoResponse vencimento, String idProposta) {
 		this.id = id;
 		this.emitidoEm = emitidoEm;
@@ -69,6 +71,7 @@ public class CadastraCartaoResponse {
 		}
 		cartao.setVencimento(vencimento.toModel(cartao));
 		return cartao;
+		
 
 	}
 	
@@ -104,11 +107,11 @@ public class CadastraCartaoResponse {
 		this.bloqueios = bloqueios;
 	}
 
-	public List<AvisoViagemResponse> getAvisos() {
+	public List<AvisoViagemInfo> getAvisos() {
 		return avisos;
 	}
 
-	public void setAvisos(List<AvisoViagemResponse> avisos) {
+	public void setAvisos(List<AvisoViagemInfo> avisos) {
 		this.avisos = avisos;
 	}
 

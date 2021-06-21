@@ -1,5 +1,6 @@
 package br.com.zupacademy.mario.proposta.domain.Cartao;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -18,6 +19,9 @@ public class AvisoViagem {
 	private LocalDate validoAte;
 	private String destino;
 	private UUID uuid = UUID.randomUUID();
+	private String ipDaSolicitacao;
+	private String userAgentDaSolicitacao;
+	private Instant instante = Instant.now();
 	
 	@ManyToOne
 	private Cartao cartao;
@@ -25,10 +29,16 @@ public class AvisoViagem {
 	@Deprecated
 	public AvisoViagem() {}
 
-	public AvisoViagem(LocalDate validoAte, String destino,Cartao cartao) {
+	public AvisoViagem(LocalDate validoAte, String destino, Cartao cartao, String ipDaSolicitacao,
+			String userAgentDaSolicitacao) {
 		this.validoAte = validoAte;
 		this.destino = destino;
-		this.cartao=cartao;
+		this.cartao = cartao;
+		this.ipDaSolicitacao = ipDaSolicitacao;
+		this.userAgentDaSolicitacao = userAgentDaSolicitacao;
+
 	}
+
+
 
 }

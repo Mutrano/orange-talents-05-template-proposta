@@ -103,9 +103,11 @@ public class Cartao {
 	}
 
 	public void addBiometria(Biometria biometria) {
-		biometrias.add(biometria);
+		this.biometrias.add(biometria);
 	}
-
+	public void addAvisoViagem(AvisoViagem avisoViagem) {
+		this.avisos.add(avisoViagem);
+	}
 	public EstadoCartao getEstadoCartao() {
 		return estadoCartao;
 	}

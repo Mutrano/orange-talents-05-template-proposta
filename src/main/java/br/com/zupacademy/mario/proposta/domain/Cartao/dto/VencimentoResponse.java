@@ -1,9 +1,12 @@
-package br.com.zupacademy.mario.proposta.domain.Cartao;
+package br.com.zupacademy.mario.proposta.domain.Cartao.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import br.com.zupacademy.mario.proposta.domain.Cartao.Cartao;
+import br.com.zupacademy.mario.proposta.domain.Cartao.Vencimento;
 public class VencimentoResponse {
 	@JsonProperty
 	private String id;

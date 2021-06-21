@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.com.zupacademy.mario.proposta.domain.Cartao.dto.SolicitacaoBloqueio;
 import br.com.zupacademy.mario.proposta.domain.shared.ExecutaTransacao;
 import br.com.zupacademy.mario.proposta.metrics.MinhasMetricas;
 import feign.FeignException;
