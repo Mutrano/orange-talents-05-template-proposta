@@ -1,8 +1,6 @@
 package br.com.zupacademy.mario.proposta.domain.Cartao;
 
-import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,9 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.zupacademy.mario.proposta.domain.shared.ExecutaTransacao;
+import br.com.zupacademy.mario.proposta.metrics.MinhasMetricas;
 import feign.FeignException;
 
 @RestController
@@ -26,12 +24,20 @@ public class CadastraBloqueioController {
 	private EntityManager em;
 	private ExecutaTransacao executaTransacao;
 	private CartaoClient cartaoClient;
+	private MinhasMetricas metricas;
 
-	public CadastraBloqueioController(EntityManager em, ExecutaTransacao executaTransacao,CartaoClient cartaoClient) {
+	
+
+
+	public CadastraBloqueioController(EntityManager em, ExecutaTransacao executaTransacao, CartaoClient cartaoClient,
+			MinhasMetricas metricas) {
 		this.em = em;
 		this.executaTransacao = executaTransacao;
-		this.cartaoClient=cartaoClient;
+		this.cartaoClient = cartaoClient;
+		this.metricas = metricas;
 	}
+
+
 
 
 	@PostMapping("/Cartoes/{uuid}/Bloqueios")
@@ -65,13 +71,17 @@ public class CadastraBloqueioController {
 			if(resultadoBloqueio.ehBloqueado()) {
 				cartaoEncontrado.setEstadoCartao(EstadoCartao.BLOQUEADO);
 				executaTransacao.salvaEComita(bloqueio);
+				metricas.contaBloqueioComSucesso();
+				return ResponseEntity.ok().build();
 			}
+			metricas.contaBloqueioFalho();
+			return ResponseEntity.ok().build();
 			
 		}
 		catch(FeignException expn) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "não conseguimos processar seu bloqueio");
 		}
 
-		return ResponseEntity.ok().build();
+		
 	}
 }

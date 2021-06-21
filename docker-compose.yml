@@ -16,6 +16,8 @@ services:
       URL_CARTOES: http://contas:8888
       KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/nosso-cartao
       KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/nosso-cartao/protocol/openid-connect/certs
+      NOME_DA_APLICACAO: proposta
+      AMBIENTE: desenvolvimento
 
     depends_on: 
         - "postgres-dev"
@@ -121,13 +123,14 @@ services:
  #   environment:
  #     COLLECTOR_ZIPKIN_HTTP_PORT: 9411
 
-#  prometheus:
-#    image: prom/prometheus
-#    volumes:
-#    - prometheus-volume:/etc/prometheus/
-#    network_mode: bridge
-#    ports:
-#      - "9090:9090"
+  #prometheus:
+  #  image: prom/prometheus
+  #  volumes:
+    #- ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #  - prometheus-volume:/etc/prometheus/
+  #  network_mode: bridge
+  #  ports:
+  #    - "9090:9090"
 
  # grafana:
  ##   image: grafana/grafana

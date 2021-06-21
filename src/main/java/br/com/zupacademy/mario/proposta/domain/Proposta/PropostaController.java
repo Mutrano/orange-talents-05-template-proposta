@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.zupacademy.mario.proposta.metrics.MinhasMetricas;
 import feign.FeignException.FeignClientException;
 import feign.FeignException.FeignServerException;
 
@@ -29,6 +30,8 @@ public class PropostaController {
 	@Autowired
 	private PropostaClient propostaClient;
 
+	@Autowired
+	private MinhasMetricas metricas;
 
 	@PostMapping
 	public ResponseEntity<Void> cadastraProposta(@RequestBody @Valid CadastraPropostaRequest request,
@@ -43,14 +46,18 @@ public class PropostaController {
 		var propostaSalva = repository.save(request.toModel());
 		var solicitacaoAnalise = new InformacaoProposta(propostaSalva.getDocumento(), propostaSalva.getNome(),
 				propostaSalva.getId().toString());
+		
+		//checa com a api legado a elegibilidade da proposta
 		try {
 			var resultadoAnalise = propostaClient.solicitaAnalise(solicitacaoAnalise);
 
 			if (resultadoAnalise.getResultadoSolicitacao() == EstadoAnalise.SEM_RESTRICAO) {
 				propostaSalva.setEstadoProposta(EstadoProposta.ELEGIVEL);
 				propostaSalva = repository.save(propostaSalva);
+				metricas.contaPropostaElegivel();
 			}
 		} catch (FeignClientException expn) {
+			metricas.contaPropostaNaoElegivel();
 		} catch (FeignServerException expn) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
 					"Tivemos um problema processando sua proposta");
@@ -68,7 +75,7 @@ public class PropostaController {
 		
 		var acompanhamentoProposta = AcompanhamentoPropostaResponse.deProposta(propostaEncontrada.orElseThrow(
 				()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Proposta não encontrada")  ));
-		
+		metricas.contaAcompanhamentoProposta();
 		return ResponseEntity.ok().body(acompanhamentoProposta);
 	}
 	
