@@ -1,6 +1,7 @@
 package br.com.zupacademy.mario.proposta.domain.Cartao;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -14,20 +15,31 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.zupacademy.mario.proposta.domain.Cartao.dto.CadastraBiometriaRequest;
+import io.opentracing.Tracer;
 
 @RestController
 public class BiometriaController {
 
 	private CartaoRepository repository;
+	private Tracer tracer;
 
-	public BiometriaController(CartaoRepository repository) {
+	public BiometriaController(CartaoRepository repository, Tracer tracer) {
 		this.repository = repository;
+		this.tracer = tracer;
 	}
+
 
 	@PostMapping("/Cartoes/{uuid}/Biometrias")
 	public ResponseEntity<Void> cadastraBiometria(@Valid @RequestBody CadastraBiometriaRequest request,
 			@PathVariable String uuid, UriComponentsBuilder builder) {
-
+		
+		//propaga span do Jaeger
+				var activeSpan = tracer.activeSpan();
+				var email = activeSpan.getBaggageItem("user.email");
+				if(Objects.nonNull(email)) {
+					activeSpan.setBaggageItem("user.email", email);
+				}
+		
 		var cartaoEncontrado = repository.findByUuid(uuid).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "O cartão informado não foi encontrado"));
 

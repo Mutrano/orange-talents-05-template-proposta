@@ -2,6 +2,7 @@ package br.com.zupacademy.mario.proposta.domain.Cartao;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -18,6 +19,7 @@ import br.com.zupacademy.mario.proposta.domain.Cartao.dto.SolicitacaoBloqueio;
 import br.com.zupacademy.mario.proposta.domain.shared.ExecutaTransacao;
 import br.com.zupacademy.mario.proposta.metrics.MinhasMetricas;
 import feign.FeignException;
+import io.opentracing.Tracer;
 
 @RestController
 public class CadastraBloqueioController {
@@ -26,23 +28,27 @@ public class CadastraBloqueioController {
 	private ExecutaTransacao executaTransacao;
 	private CartaoClient cartaoClient;
 	private MinhasMetricas metricas;
-
-	
-
+	private Tracer tracer;
 
 	public CadastraBloqueioController(EntityManager em, ExecutaTransacao executaTransacao, CartaoClient cartaoClient,
-			MinhasMetricas metricas) {
+			MinhasMetricas metricas, Tracer tracer) {
 		this.em = em;
 		this.executaTransacao = executaTransacao;
 		this.cartaoClient = cartaoClient;
 		this.metricas = metricas;
+		this.tracer = tracer;
 	}
-
-
-
 
 	@PostMapping("/Cartoes/{uuid}/Bloqueios")
 	public ResponseEntity<Void> cadastraBloqueio(@PathVariable String uuid, HttpServletRequest request){
+		//propaga span do Jaeger
+		var activeSpan = tracer.activeSpan();
+		var email = activeSpan.getBaggageItem("user.email");
+		if(Objects.nonNull(email)) {
+			activeSpan.setBaggageItem("user.email", email);
+		}
+		
+		
 		
 		var ipDaRequest = request.getRemoteAddr();
 		var userAgentDaRequest = request.getHeader("User-Agent");

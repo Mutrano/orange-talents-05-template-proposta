@@ -1,5 +1,7 @@
 package br.com.zupacademy.mario.proposta.domain.Cartao;
 
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -14,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import br.com.zupacademy.mario.proposta.domain.Cartao.dto.AvisoViagemInfo;
 import br.com.zupacademy.mario.proposta.metrics.MinhasMetricas;
 import feign.FeignException;
+import io.opentracing.Tracer;
 
 @RestController
 public class CadastraAvisoController {
@@ -21,15 +24,25 @@ public class CadastraAvisoController {
 	private CartaoRepository repository;
 	private MinhasMetricas metricas;
 	private CartaoClient cartaoClient;
+	private Tracer tracer;
 	
-	public CadastraAvisoController(CartaoRepository repository, MinhasMetricas metricas, CartaoClient cartaoClient) {
+	public CadastraAvisoController(CartaoRepository repository, MinhasMetricas metricas, CartaoClient cartaoClient,
+			Tracer tracer) {
 		this.repository = repository;
 		this.metricas = metricas;
 		this.cartaoClient = cartaoClient;
+		this.tracer = tracer;
 	}
 
 	@PostMapping("/Cartoes/{uuid}/AvisosViagem")
 	ResponseEntity<Void> cadastraAviso(@PathVariable String uuid, @Valid @RequestBody AvisoViagemInfo request,HttpServletRequest httpRequest){
+		//propaga span do Jaeger
+		var activeSpan = tracer.activeSpan();
+		var email = activeSpan.getBaggageItem("user.email");
+		if(Objects.nonNull(email)) {
+			activeSpan.setBaggageItem("user.email", email);
+		}
+		
 		var ipdaRequest = httpRequest.getRemoteAddr();
 		var userAgentDaRequest = httpRequest.getHeader("User-Agent");
 		

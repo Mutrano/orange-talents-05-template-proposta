@@ -1,6 +1,7 @@
 package br.com.zupacademy.mario.proposta.domain.Cartao;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import br.com.zupacademy.mario.proposta.domain.Cartao.dto.InclusaoCarteira;
 import br.com.zupacademy.mario.proposta.domain.shared.ExecutaTransacao;
 import br.com.zupacademy.mario.proposta.metrics.MinhasMetricas;
 import feign.FeignException;
+import io.opentracing.Tracer;
 
 @RestController
 public class CadastraCarteiraController {
@@ -27,30 +29,26 @@ public class CadastraCarteiraController {
 	private EntityManager em;
 	private CartaoClient cartaoClient;
 	private ExecutaTransacao executaTransacao;
-
-
-
-
-
-
+	private Tracer tracer;
 
 	public CadastraCarteiraController(MinhasMetricas metricas, EntityManager em, CartaoClient cartaoClient,
-			ExecutaTransacao executaTransacao) {
+			ExecutaTransacao executaTransacao, Tracer tracer) {
 		this.metricas = metricas;
 		this.em = em;
 		this.cartaoClient = cartaoClient;
 		this.executaTransacao = executaTransacao;
+		this.tracer = tracer;
 	}
-
-
-
-
-
-
 
 	@PostMapping("/Cartoes/{uuid}/Carteiras")
 	public ResponseEntity<Void> cadastraCarteira(@PathVariable String uuid,
 			@Valid @RequestBody CadastraCarteiraRequest request, UriComponentsBuilder uribuilder) {
+		//propaga span do Jaeger
+		var activeSpan = tracer.activeSpan();
+		var email = activeSpan.getBaggageItem("user.email");
+		if(Objects.nonNull(email)) {
+			activeSpan.setBaggageItem("user.email", email);
+		}
 
 		// caso o cartão não exista retorna 404
 		var query = em.createQuery("SELECT c from Cartao c WHERE c.uuid=:pUuid").setParameter("pUuid", uuid);

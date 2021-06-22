@@ -1,5 +1,6 @@
 package br.com.zupacademy.mario.proposta.domain.Proposta;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.com.zupacademy.mario.proposta.metrics.MinhasMetricas;
 import feign.FeignException.FeignClientException;
 import feign.FeignException.FeignServerException;
+import io.opentracing.Tracer;
 
 @RestController
 @RequestMapping("/Propostas")
@@ -32,11 +34,24 @@ public class PropostaController {
 
 	@Autowired
 	private MinhasMetricas metricas;
-
+    
+	@Autowired
+	private Tracer tracer;
+	
 	@PostMapping
 	public ResponseEntity<Void> cadastraProposta(@RequestBody @Valid CadastraPropostaRequest request,
 			UriComponentsBuilder uricomponentsBuilder) {
-
+		
+		var activeSpan = tracer.activeSpan();
+		var email = activeSpan.getBaggageItem("user.email");
+		if(Objects.nonNull(email)) {
+			activeSpan.setBaggageItem("user.email", email);
+		}
+		else {
+			activeSpan.setBaggageItem("user.email", request.getEmail());
+			activeSpan.setTag("user.email", request.getEmail());
+		}
+		
 		var possiveisPropostas = repository.findByDocumento(request.getDocumento());
 
 		if (!possiveisPropostas.get().isEmpty()) {
@@ -71,6 +86,11 @@ public class PropostaController {
 	@GetMapping("/{uuid}")
 	public ResponseEntity<AcompanhamentoPropostaResponse> acompanhamentoProposta(@PathVariable UUID uuid){
 		
+		var activeSpan = tracer.activeSpan();
+		var email = activeSpan.getBaggageItem("user.email");
+		if(Objects.nonNull(email)) {
+			activeSpan.setBaggageItem("user.email", email);
+		}
 		var propostaEncontrada = repository.findByUuid(uuid);
 		
 		var acompanhamentoProposta = AcompanhamentoPropostaResponse.deProposta(propostaEncontrada.orElseThrow(
