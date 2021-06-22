@@ -47,7 +47,7 @@ public class CadastraBloqueioController {
 		var ipDaRequest = request.getRemoteAddr();
 		var userAgentDaRequest = request.getHeader("User-Agent");
 		
-		//checar se o cartao ja existe, caso exista retorna 404
+		//checar se o cartao existe existe, caso não exista retorna 404
 		var query = em.createQuery("SELECT c from Cartao c WHERE c.uuid=:pUuid")
 				.setParameter("pUuid", uuid);
 		
