@@ -2,6 +2,7 @@ package br.com.zupacademy.mario.proposta.domain.Proposta;
 
 import java.util.UUID;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import br.com.zupacademy.mario.proposta.domain.Cartao.Cartao;
+import br.com.zupacademy.mario.proposta.domain.shared.Crypto;
 
 @Entity
 public class Proposta {
@@ -18,8 +20,10 @@ public class Proposta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
+	@Convert(converter = Crypto.class)
 	private String documento;
+	
 	private String email;
 	private String nome;
 	private String endereco;
@@ -39,7 +43,7 @@ public class Proposta {
 	}
 
 	public Proposta(String documento, String email, String nome, String endereco, Double salario) {
-		this.documento = documento;
+		this.documento=documento;
 		this.email = email;
 		this.nome = nome;
 		this.endereco = endereco;

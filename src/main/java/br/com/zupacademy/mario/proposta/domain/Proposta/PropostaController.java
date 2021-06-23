@@ -51,7 +51,6 @@ public class PropostaController {
 			activeSpan.setBaggageItem("user.email", request.getEmail());
 			activeSpan.setTag("user.email", request.getEmail());
 		}
-		
 		var possiveisPropostas = repository.findByDocumento(request.getDocumento());
 
 		if (!possiveisPropostas.get().isEmpty()) {
